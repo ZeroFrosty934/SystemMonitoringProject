@@ -7,5 +7,9 @@ while True:
     print(psutil.virtual_memory().percent)
     time.sleep(1)
     print(psutil.cpu_percent())
+    gfgfgfg
+    fggfg
+
+
 
 
