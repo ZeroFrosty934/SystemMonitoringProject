@@ -1,12 +1,12 @@
-import activity_monitor, create_delete_alarm, active_alarms, moitoring_mode
+from MenuTabs import active_alarms, activity_monitor, create_delete_alarm, moitoring_mode
+
+
 def main_menu():
     print("Menu")
     print("1. Activity Monitor")
     print("2. Create/Delete Alarm ")
     print("3. Active Alarms")
     print("4. Start Monitoring Mode")
-
-
 
 
 def main_program():
@@ -28,3 +28,4 @@ def main_program():
 
 print("Welcome to System Monitor!")
 main_program()
+
