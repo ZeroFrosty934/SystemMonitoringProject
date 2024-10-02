@@ -1,24 +1,29 @@
 import psutil, time, os
-
+from tqdm import tqdm
+from time import sleep
 
 #RAM
 def ram_usage():
-    print(psutil.virtual_memory().percent)
-    print(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total)
+    #print(psutil.virtual_memory().percent)
+    ramTotal = int(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total)
+    print(f"Ram = {ramTotal}%")
 
 #CPU
 def cpu_usage():
-    print(psutil.cpu_times_percent(interval=1))
-    print(psutil.cpu_percent(interval=1)) #CPU % in every second
+    #print(psutil.cpu_times_percent(interval=1))
+    psutil.cpu_percent(interval=1) #CPU % in every second
+    cpuUsed = int(psutil.cpu_percent(interval=1))
+    print(f"CPU = {cpuUsed}%")
 
 #Disk
 def disk_usage():
-     disk = float(100)
-     diskUsed = float(psutil.disk_usage('/').percent)
+     disk = int(100)
+     diskUsed = int(psutil.disk_usage('/').percent)
      diskTotal = disk - diskUsed
-     print(diskTotal)
-     print(psutil.disk_usage('/'))
+     print(f"Disk = {diskTotal}%")
+     #print(psutil.disk_usage('/'))
 
 
-while True:
-    pass
+ram_usage()
+cpu_usage()
+disk_usage()
