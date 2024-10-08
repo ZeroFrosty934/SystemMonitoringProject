@@ -1,29 +1,31 @@
-from MenuTabs import active_alarms, activity_monitor, create_delete_alarm, moitoring_mode
-
-
 def main_menu():
     print("Menu")
+    print("0. Start/Off")
     print("1. Activity Monitor")
     print("2. Create/Delete Alarm ")
     print("3. Active Alarms")
     print("4. Start Monitoring Mode")
 
 
+
 def main_program():
     while True:
         main_menu()
         choice = input("Please press a number to continue. \n")
-        if choice == "1":
-            activity_monitor.greeting()
+        if choice == "0":
+            pass
+
+        elif choice == "1":
+            pass
 
         elif choice == "2":
-            create_delete_alarm.greeting()
+            pass
 
         elif choice == "3":
-            active_alarms.greeting()
+            pass
 
         elif choice == "4":
-            moitoring_mode.greeting()
+            pass
 
 
 print("Welcome to System Monitor!")

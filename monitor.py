@@ -4,9 +4,10 @@ from time import sleep
 
 #RAM
 def ram_usage():
-    #print(psutil.virtual_memory().percent)
-    ramTotal = int(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total)
-    print(f"Ram = {ramTotal}%")
+    ramTotal2 = int(psutil.virtual_memory().percent)
+    #ramTotal = int(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total)
+    #print(f"Ram = {ramTotal}%")
+    print(f"Ram = {ramTotal2}%")
 
 #CPU
 def cpu_usage():
@@ -24,6 +25,6 @@ def disk_usage():
      #print(psutil.disk_usage('/'))
 
 
-ram_usage()
-cpu_usage()
 disk_usage()
+cpu_usage()
+ram_usage()
