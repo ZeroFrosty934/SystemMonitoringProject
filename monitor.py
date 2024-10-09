@@ -1,30 +1,25 @@
-import psutil, time, os
-from tqdm import tqdm
-from time import sleep
+import psutil, time
 
-#RAM
-def ram_usage():
-    ramTotal2 = int(psutil.virtual_memory().percent)
-    #ramTotal = int(psutil.virtual_memory().available * 100 / psutil.virtual_memory().total)
-    #print(f"Ram = {ramTotal}%")
-    print(f"Ram = {ramTotal2}%")
+class Monitor:
+    def __init__(self):
+        self.active = False
 
-#CPU
-def cpu_usage():
-    #print(psutil.cpu_times_percent(interval=1))
-    psutil.cpu_percent(interval=1) #CPU % in every second
-    cpuUsed = int(psutil.cpu_percent(interval=1))
-    print(f"CPU = {cpuUsed}%")
+    def start(self):
+        self.active = True
+        print("Monitoring has been started...")
 
-#Disk
-def disk_usage():
-     disk = int(100)
-     diskUsed = int(psutil.disk_usage('/').percent)
-     diskTotal = disk - diskUsed
-     print(f"Disk = {diskTotal}%")
-     #print(psutil.disk_usage('/'))
+    def status(self):
+        if self.active:
+            cpu = psutil.cpu_percent()
+            ram = psutil.virtual_memory()
+            disk = psutil.disk_usage('/')
 
+        ram_used_gb = round(ram.used / (1024 ** 3),1)
+        ram_total_gb = round(ram.total / (1024 ** 3))
+        disk_used_gb = round(disk.used / (1024 ** 3))
+        disk_total_gb = round(disk.total / (1024 ** 3))
 
-disk_usage()
-cpu_usage()
-ram_usage()
+        return (f"CPU Usage: {cpu}%\n"
+                f"Ram Usage: {ram_used_gb} GB out of {ram_total_gb} GB\n"
+                f"Disk Usage: {disk_used_gb} GB out of {disk_total_gb} GB")
+
