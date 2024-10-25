@@ -16,10 +16,11 @@ class MenuHandler:
         print("2. Active list monitoring")
         print("3. Configure system alarms")
         print("4. Show alarms")
-        print("5. Start Monitoring mode")
+        print("5. Delete Alarms")
+        print("6. Start Monitoring mode")
         print("0. Exit")
 
-        number = input("Please, enter a number")
+        number = input("Please, enter a number: \n")
 
         if number == "1":
             self.start_monitoring()
@@ -30,6 +31,8 @@ class MenuHandler:
         elif number == "4":
             self.show_alarms()
         elif number == "5":
+            self.alarms.delete_alarms()
+        elif number == "6":
             self.start_monitoring_mode()
         elif number == "0":
             print("You are now exiting the program....")

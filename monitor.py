@@ -1,4 +1,4 @@
-import psutil, time
+import psutil, time, os
 
 class Monitor:
     def __init__(self):
@@ -27,17 +27,22 @@ class Monitor:
         else:
             return None
     def monitoring_mode(self, alarms):
-        while True:
-            cpu = psutil.cpu_percent()
-            ram = psutil.virtual_memory().percent
-            disk = psutil.disk_usage('/').percent
+        os.system("clear")
+        try:
+            while True:
+                cpu = psutil.cpu_percent()
+                ram = psutil.virtual_memory().percent
+                disk = psutil.disk_usage('/').percent
 
-            print(f"Monitoring: "
-                  f"CPU: {cpu}% Ram: {ram}% Disk: {disk}%")
+                print(f"Monitoring: "
+                      f"CPU: {cpu}% Ram: {ram}% Disk: {disk}%")
 
-            alarms.check_alarms(cpu, ram, disk)
+                alarms.check_alarms(cpu, ram, disk)
 
-            time.sleep(1)
+                time.sleep(1)
+                os.system("clear")
 
-            input("Enter any key to stop monitoring mode")
-            break
+        except KeyboardInterrupt:
+            os.system("clear")
+            print("Monitoring mode is now closed")
+            pass
