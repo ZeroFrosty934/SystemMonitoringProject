@@ -44,19 +44,19 @@ class Alarms:
     def check_alarms(self, cpu, ram, disk):
         for level in sorted(self.alarms["cpu"], reverse=True):
             if cpu > level:
-                self.logger.log(f"CPU usage is over {level}%")
+                self.logger.log(f"***WARNING*** CPU usage is over {level}%")
                 print(f"WARNING: CPU usage is over {level}%")
                 break
 
         for level in sorted(self.alarms["ram"], reverse=True):
             if ram > level:
-                self.logger.log(f"Ram usage is over {level}%")
+                self.logger.log(f"***WARNING*** Ram usage is over {level}%")
                 print(f"WARNING ram usage is over {level}%")
                 break
 
         for level in sorted(self.alarms["disk"], reverse=True):
             if disk > level:
-                self.logger.log(f"Disk usage is over {level}%")
+                self.logger.log(f"***WARNING*** Disk usage is over {level}%")
                 print(f"WARNING disk usage is over {level}%")
                 break
 

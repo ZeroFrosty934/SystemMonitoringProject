@@ -1,12 +1,16 @@
+from logger import Logger
 import psutil, time, os
+
 
 class Monitor:
     def __init__(self):
         self.active = False
+        self.logger = Logger()
 
     def start(self):
         self.active = True
         print("Monitoring has been started...")
+        self.logger.log(f"Monitoring has been started")
 
     def status(self):#hämtar cpu,ram och disk information från datorn.
         if self.active:
@@ -44,5 +48,6 @@ class Monitor:
 
         except KeyboardInterrupt:
             os.system("clear")
+            self.logger.log("Monitoring mode is now closed")
             print("Monitoring mode is now closed")
             pass
