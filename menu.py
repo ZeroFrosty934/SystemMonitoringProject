@@ -1,7 +1,8 @@
-# Classer med olika funktioner.
+# Klasser med olika funktioner.
 from monitor import Monitor
 from alarms import Alarms
 from logger import Logger
+
 
 class MenuHandler:
     def __init__(self):
@@ -36,6 +37,7 @@ class MenuHandler:
             self.start_monitoring_mode()
         elif number == "0":
             print("You are now exiting the program....")
+            self.logger.log("Exiting the program")
             exit()
         else:
             print("Wrong input, please try again!")

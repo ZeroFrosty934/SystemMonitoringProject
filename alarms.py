@@ -1,7 +1,9 @@
 import json
 from logger import Logger
 
+
 class Alarms:
+
     def __init__(self):
         self.logger = Logger()
         self.alarms = {
@@ -28,21 +30,21 @@ class Alarms:
 
     def set_alarm(self, alarm_type):
         level = input("Set alarm level percentage (1-100): ")
-        if level.isdigit() and 0 <= int(level) <= 100:
+        if level.isdigit() and 0 <= int(level) <= 100:  # <--- tar bara emot digit värden mellan 0-100.
             self.logger.log(f"{alarm_type.capitalize()} is set to {level}")
             self.alarms[alarm_type].append(int(level))
             self.save_alarms()
             print(f"{alarm_type.capitalize()} alarm set to {level}%")
         else:
-            print("Wrong input! Eneter a correct level percentage. ")
+            print("Wrong input! Enter a correct level percentage. ")
 
-    def show(self):
+    def show(self):  # visar alla alarm som är skapade.
         for alarm_type, alarm_levels in self.alarms.items():
             for level in sorted(alarm_levels):
                 print(f"{alarm_type.capitalize()} Alarm: {level}%")
 
-    def check_alarms(self, cpu, ram, disk):
-        for level in sorted(self.alarms["cpu"], reverse=True):
+    def check_alarms(self, cpu, ram, disk):  # metod som varnar när värden överstiger.
+        for level in sorted(self.alarms["cpu"], reverse=True):  # sorterar värden i storleksordning
             if cpu > level:
                 self.logger.log(f"***WARNING*** CPU usage is over {level}%")
                 print(f"WARNING: CPU usage is over {level}%")
@@ -77,7 +79,6 @@ class Alarms:
         with open("data/alarms.JSON", "w") as file:
             json.dump(self.alarms, file)
 
-
     def delete_alarms(self):
         print("-----Delete Alarms-----")
         print("1. Delete CPU alarms")
@@ -101,7 +102,7 @@ class Alarms:
         else:
             print("Wrong input, please try again!")
 
-    def delete_alarms_by_type(self, alarm_type):
+    def delete_alarms_by_type(self, alarm_type):  # Raderar alarm_type värden i alarm dict.
         if alarm_type in self.alarms:
             self.logger.log(f"Deleting {alarm_type.capitalize()} alarms")
             self.alarms[alarm_type] = []
@@ -110,10 +111,9 @@ class Alarms:
         else:
             print("Invalid alarm type.")
 
-    def delete_all_alarms(self):
+    def delete_all_alarms(self):  # raderar alla värden i alarm dict.
         self.logger.log("Deleting all alarms")
         for alarm_type in self.alarms:
             self.alarms[alarm_type] = []
         self.save_alarms()
         print("All alarms deleted.")
-
