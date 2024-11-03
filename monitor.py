@@ -38,6 +38,7 @@ class Monitor:
                 ram = psutil.virtual_memory().percent
                 disk = psutil.disk_usage('/').percent
 
+                print("***System alarms is now active***")
                 print("Exit = Ctrl+C")
                 print(f"Monitoring: "
                       f"CPU: {cpu}% Ram: {ram}% Disk: {disk}%")

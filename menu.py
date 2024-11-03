@@ -59,10 +59,9 @@ class MenuHandler:
         self.alarms.configure()
         input("Enter any key to go back to the menu...")
 
-    def show_alarms(self):
-        alarms = self.alarms.show()
-        if alarms:
-            print(alarms)
+    def show_alarms(self):  # visar alla alarm som är skapade.
+        if any(self.alarms.alarms.values()):
+            self.alarms.show()
         else:
             print("There is no alarms configured.")
         input("Enter any key to go back to the menu...")

@@ -38,10 +38,13 @@ class Alarms:
         else:
             print("Wrong input! Enter a correct level percentage. ")
 
-    def show(self):  # visar alla alarm som är skapade.
-        for alarm_type, alarm_levels in self.alarms.items():
-            for level in sorted(alarm_levels):
-                print(f"{alarm_type.capitalize()} Alarm: {level}%")
+    def show(self):  # sorterar typ och level med lambda funktion.
+        sorted_alarms = sorted(
+            ((alarm_type, level) for alarm_type, levels in self.alarms.items() for level in levels),
+            key=lambda x: (x[0], x[1])
+        )
+        for alarm_type, level in sorted_alarms:
+            print(f"{alarm_type.capitalize()} Alarm: {level}%")
 
     def check_alarms(self, cpu, ram, disk):  # metod som varnar när värden överstiger.
         for level in sorted(self.alarms["cpu"], reverse=True):  # sorterar värden i storleksordning
@@ -66,12 +69,6 @@ class Alarms:
         try:
             with open("data/alarms.JSON", "r") as file:
                 self.alarms = json.load(file)
-                if "cpu" not in self.alarms:
-                    self.alarms["cpu"] = []
-                elif "ram" not in self.alarms:
-                    self.alarms["ram"] = []
-                elif "disk" not in self.alarms:
-                    self.alarms["disk"] = []
         except FileNotFoundError:
             pass
 
