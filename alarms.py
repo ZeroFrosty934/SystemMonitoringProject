@@ -31,7 +31,7 @@ class Alarms:
     def set_alarm(self, alarm_type):
         level = input("Set alarm level percentage (1-100): ")
         if level.isdigit() and 0 <= int(level) <= 100:  # <--- tar bara emot digit värden mellan 0-100.
-            self.logger.log(f"{alarm_type.capitalize()} is set to {level}")
+            self.logger.log(f"{alarm_type.capitalize()} is set to {level}%")
             self.alarms[alarm_type].append(int(level))
             self.save_alarms()
             print(f"{alarm_type.capitalize()} alarm set to {level}%")
@@ -47,23 +47,24 @@ class Alarms:
             print(f"{alarm_type.capitalize()} Alarm: {level}%")
 
     def check_alarms(self, cpu, ram, disk):  # metod som varnar när värden överstiger.
-        for level in sorted(self.alarms["cpu"], reverse=True):  # sorterar värden i storleksordning
-            if cpu > level:
-                self.logger.log(f"***WARNING*** CPU usage is over {level}%")
-                print(f"WARNING: CPU usage is over {level}%")
-                break
 
-        for level in sorted(self.alarms["ram"], reverse=True):
-            if ram > level:
-                self.logger.log(f"***WARNING*** Ram usage is over {level}%")
-                print(f"WARNING ram usage is over {level}%")
-                break
+        if self.alarms["cpu"]:
+            highest_cpu_threshold = max(self.alarms["cpu"])
+            if cpu > highest_cpu_threshold:
+                self.logger.log(f"***WARNING*** CPU usage is over {highest_cpu_threshold}%")
+                print(f"WARNING: CPU usage is over {highest_cpu_threshold}%")
 
-        for level in sorted(self.alarms["disk"], reverse=True):
-            if disk > level:
-                self.logger.log(f"***WARNING*** Disk usage is over {level}%")
-                print(f"WARNING disk usage is over {level}%")
-                break
+        if self.alarms["ram"]:
+            highest_ram_threshold = max(self.alarms["ram"])
+            if ram > highest_ram_threshold:
+                self.logger.log(f"***WARNING*** Ram usage is over {highest_ram_threshold}%")
+                print(f"WARNING ram usage is over {highest_ram_threshold}%")
+
+        if self.alarms["disk"]:
+            highest_disk_threshold = max(self.alarms["disk"])
+            if disk > highest_disk_threshold:
+                self.logger.log(f"***WARNING*** Disk usage is over {highest_disk_threshold}%")
+                print(f"WARNING disk usage is over {highest_disk_threshold}%")
 
     def load_alarms(self):
         try:
@@ -78,37 +79,51 @@ class Alarms:
 
     def delete_alarms(self):
         print("-----Delete Alarms-----")
-        print("1. Delete CPU alarms")
-        print("2. Delete RAM alarms")
-        print("3. Delete Disk alarms")
-        print("4. Delete all alarms")
+        all_alarms = self.get_all_alarms()  # Hämta en lista över alla larm med unika identifierare.
+
+        if not all_alarms:  # Visningsalternativ
+            print("No alarms to delete.")
+            input("Enter any key to return to the main menu...")
+            return
+
+        for idx, (alarm_type, level) in enumerate(all_alarms, 1):
+            print(f"{idx}. {alarm_type.capitalize()} {level}%")
         print("0. Go back")
+        print(f"{len(all_alarms) + 1}. Delete all alarms")
 
-        number = input("Please, enter a number: \n")
+        # Få användarinput för val av radering
+        choice = input("Please enter a number to delete an alarm or choose an option: ")
 
-        if number == "1":
-            self.delete_alarms_by_type("cpu")
-        elif number == "2":
-            self.delete_alarms_by_type("ram")
-        elif number == "3":
-            self.delete_alarms_by_type("disk")
-        elif number == "4":
-            self.delete_all_alarms()
-        elif number == "0":
-            print("Returning to main menu...")
+        if choice.isdigit():
+            choice = int(choice)
+
+            if choice == 0:
+                print("Returning to main menu...")
+
+            elif choice == len(all_alarms) + 1:
+                self.delete_all_alarms()
+
+            elif 1 <= choice <= len(all_alarms):
+                alarm_type, level = all_alarms[choice - 1]
+                self.delete_specific_alarm(alarm_type, level)
+            else:
+                print("Wrong choice. Please try again.")
         else:
-            print("Wrong input, please try again!")
+            print("Wrong input. Please enter a number.")
 
-    def delete_alarms_by_type(self, alarm_type):  # Raderar alarm_type värden i alarm dict.
-        if alarm_type in self.alarms:
-            self.logger.log(f"Deleting {alarm_type.capitalize()} alarms")
-            self.alarms[alarm_type] = []
+    def get_all_alarms(self):  # Få alla larm med typ och nivå i en lista
+        return [(alarm_type, level) for alarm_type, levels in self.alarms.items() for level in levels]
+
+    def delete_specific_alarm(self, alarm_type, level):  # Ta bort den specifika larmnivån från den valda typen
+        if level in self.alarms[alarm_type]:
+            self.alarms[alarm_type].remove(level)
+            self.logger.log(f"Deleted {alarm_type.capitalize()} alarm at {level}%")
             self.save_alarms()
-            print(f"{alarm_type.capitalize()} alarms deleted.")
+            print(f"{alarm_type.capitalize()} alarm at {level}% deleted.")
         else:
-            print("Invalid alarm type.")
+            print("Alarm not found.")
 
-    def delete_all_alarms(self):  # raderar alla värden i alarm dict.
+    def delete_all_alarms(self):  # Raderar alla larm.
         self.logger.log("Deleting all alarms")
         for alarm_type in self.alarms:
             self.alarms[alarm_type] = []
