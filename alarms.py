@@ -43,8 +43,12 @@ class Alarms:
             ((alarm_type, level) for alarm_type, levels in self.alarms.items() for level in levels),
             key=lambda x: (x[0], x[1])
         )
-        for alarm_type, level in sorted_alarms:
-            print(f"{alarm_type.capitalize()} Alarm: {level}%")
+        if sorted_alarms:
+            print("Currently configured alarms:")
+            for alarm_type, level in sorted_alarms:
+                print(f"{alarm_type.capitalize()} Alarm: {level}%")
+        else:
+            print("No alarms are configured.")
 
     def check_alarms(self, cpu, ram, disk):  # metod som varnar när värden överstiger.
 
@@ -66,12 +70,18 @@ class Alarms:
                 self.logger.log(f"***WARNING*** Disk usage is over {highest_disk_threshold}%")
                 print(f"WARNING disk usage is over {highest_disk_threshold}%")
 
-    def load_alarms(self):
+    def load_alarms(self):  # Laddar upp tidigare konfigurerade larm o, det finns.
         try:
-            with open("data/alarms.JSON", "r") as file:
+            with open("data/alarms.json", "r") as file:
                 self.alarms = json.load(file)
+            print("***Loading previously configured alarms***")
+            self.show()
         except FileNotFoundError:
-            pass
+            print("No previously configured alarms found.")
+        except json.JSONDecodeError:
+            print("Error reading alarms file. Initializing with no alarms.")
+            self.logger.log("Error reading alarms file. Initializing with no alarms.")
+            self.alarms = {"cpu": [], "ram": [], "disk": []}
 
     def save_alarms(self):
         with open("data/alarms.JSON", "w") as file:
